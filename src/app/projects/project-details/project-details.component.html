@@ -1,0 +1,21 @@
+<div class="container-fluid container-styles animate fadeIn">
+    <div class="proj-header">
+        <div class="proj-title">{{project.name | uppercase}}</div>
+        <div class="btn-group">
+            <button class="btn btn-outline-light proj-link" (click)="goToProject(project.projLink!)" [hidden]="!project.projLink"> <b>View Project</b></button>
+            <button class="btn btn-outline-light proj-link" (click)="goToGithub(project.gitLink!)"><b>View Github</b></button>
+        </div>
+    </div>
+
+    <div class="proj-info">
+
+        <div class="proj-desc">{{project.longDesc}}</div>
+        <br/>
+        <div class="proj-tech"><b>Technologies: </b> <i>{{project.technologies}}</i></div>
+        <br/>
+        <div id="slideshow" class="carousel slide" data-ride="carousel" *ngIf="project.imageUrl">
+            <img class="img-fluid" src="{{project.imageUrl}}">
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Front-End",
+        "languages": [
+            {
+                "name": "HTML5, CSS3, JavaScript",
+                "level": 3
+            },
+            {
+                "name": "Angular",
+                "level": 1
+            },
+            {
+                "name": "Bootstrap",
+                "level": 2
+            }
+        ],
+        "other": "AJAX, Google Maps API, JSON, XML, IndexedDB"
+    },
+    {
+        "name": "Back-End",
+        "languages": [
+            {
+                "name": "C#",
+                "level": 3
+            },
+            {
+                "name": "Python",
+                "level": 1
+            },
+            {
+                "name": "SQL",
+                "level": 2
+            }
+        ],
+        "other": ".NET Web API, Entity Framework, REST and SOAP Web Services"
+    }
+]

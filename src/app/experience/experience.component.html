@@ -1,0 +1,40 @@
+<div class="container container-styles animate fadeIn">
+    <div class="resume"><button onclick="window.open('../assets/documents/Zach Eggleton Resume.pdf')"
+        class="btn btn-outline-light w-100"><b>View Resume</b></button></div>
+    <br />
+    <div class="row">
+      <div class="col-md-6 experience">
+        <p class="header">EXPERIENCE</p>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let e of experience">
+            <div class="ex-info">
+              <h2>{{e?.name}}</h2>
+              <p>{{e?.title}}<br />{{e?.place}}</p>
+            </div>
+            <div class="ex-time">
+              <i>{{e?.time}}</i>
+            </div>
+          </li>
+        </ul>
+      </div>
+  
+      <div class="col-md-6 skills">
+        <p class="header">SKILLS</p>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let s of skills">
+            <div class="skill-info">
+              <h2>{{s?.name}}</h2>
+            </div>
+            <div class="skill-languages" *ngFor="let l of s.languages">
+              <b class="l-name">{{l.name}}</b>
+              <span class="l-value" *ngFor="let n of getArray(l.level)"><b>#&nbsp;</b></span>
+              <br />
+              <span class="l-vdesc"><i>{{levelDesc[l.level-1]}}</i></span>
+              <br /><br />
+            </div>
+            <div><b>Other Technologies: </b> <i>{{s.other}}</i></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One');
+
+.container-styles {
+    min-height: 100vh;
+    background-attachment: fixed;
+    background-image: linear-gradient( rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.5) ), url("../assets/imgs/Colorado2.jpg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 1s ease;
+    transform: scale(1);
+    position:relative;
+}
+
+.container-styles:hover .container-styles {
+    transform: scale(2);
+    -webkit-transform: scale(2);
+    left:-150px;
+    top:-100px;
+}
+
+nav {
+    padding: 0px;
+    font-family: 'Julius Sans One', sans-serif;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.navbar-brand {
+    margin-left: 10px;
+    font-size: 15px;   
+    letter-spacing: .15em;
+}
+
+.nav-item {
+    text-align: right;
+}
+
+.nav-link {
+    font-size: 16px;
+    padding: 15px;
+}
+
+.dropdown:hover > .dropdown-menu{
+    display: block;
+}
+
+.dropdown-menu {
+    margin-top: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.dropdown-item:hover, .dropdown-item:hover > a {
+    background-color: rgb(221, 221, 221);
+    color: black;
+}
+
+.navbar-toggler {
+    background-color: gray;
+    border: 1px solid black;
+    margin-right: 10px;
+}
+
+@media (max-width: 575px) {
+    .dropdown:hover > .dropdown-menu{
+        display: none;
+    }
+}

@@ -1,0 +1,865 @@
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        span img {
+            vertical-align: middle;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        #title {
+            border: 3px ridge;
+            background-color: rgba(255, 255, 255, 0.425);
+        }
+
+        #settingsBtn {
+            margin-left: 10px;
+            border: none;
+            background-color: gray;
+            color: white;
+            padding: 5px;
+        }
+
+        #addBtn {
+            margin-left: 10px;
+            color: white;
+            background-color: rgb(231, 163, 73);
+            padding: 5px;
+            border: none;
+            float: right;
+        }
+
+        #addMenu {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            margin-left: 10px;
+            border: 3px inset;
+            background: white;
+        }
+
+        #addMenu span {
+            float: left;
+        }
+
+        #addMenu input,
+        select {
+            float: right;
+            margin-left: 20px;
+        }
+
+        #settingsBtn:hover {
+            opacity: .5;
+        }
+
+        #addBtn:hover {
+            opacity: .5;
+        }
+
+        #confirmBtn {
+            float: right;
+        }
+
+        #legend {
+            font-family: Arial, sans-serif;
+            background: white;
+            padding: 10px;
+            margin-left: 10px;
+            border: 3px inset;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        @-webkit-keyframes animatetop {
+            from {
+                top: -300px;
+                opacity: 0
+            }
+            to {
+                top: 0;
+                opacity: 1
+            }
+        }
+
+        @keyframes animatetop {
+            from {
+                top: -300px;
+                opacity: 0
+            }
+            to {
+                top: 0;
+                opacity: 1
+            }
+        }
+
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            padding: 2px 16px;
+            background-color: rgb(231, 163, 73);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 2px 16px;
+        }
+
+        .modal button {
+            border: none;
+            padding: 5px;
+            background-color: gold;
+        }
+
+        .modal button:hover {
+            opacity: .5;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="title">
+        <h1>U.S. Travel Map</h1>
+    </div>
+    <button id="settingsBtn" onclick="TravelModule.showSettings()">Settings</button>
+    <button id="addBtn" onclick="TravelModule.showMenu()">Add New Location</button>
+    <div id="addMenu">
+        <span>Name: </span>
+        <input type="text" id="nameTxtBox">
+        <br>
+        <span>Type: </span>
+        <select id="typeDropdown">
+            <option value="0">National Park</option>
+            <option value="1">Mountains</option>
+            <option value="2">Snowboarding</option>
+            <option value="3">Home Base</option>
+            <option value="4">Resident</option>
+            <option value="5">Rural Area/Camping</option>
+            <option value="6">Beach Town</option>
+            <option value="7">Small City</option>
+            <option value="8">Medium City</option>
+            <option value="9">Large City</option>
+        </select>
+        <br>
+        <span>Latitude: </span>
+        <input type="text" id="latTxtBox">
+        <br>
+        <span>Longitude: </span>
+        <input type="text" id="lngTxtBox">
+        <br>
+        <span style="font-size: 9px">(Or click anywhere on map to fill coordinates)</span>
+        <button id="confirmBtn" onclick="TravelModule.addToDatabase()">Add</button>
+    </div>
+    <div id="legend">
+        <h2 style="font-style: italic">Legend</h2>
+        <div id="icons">
+            <span>
+                <img src="Icons/green_mountains.png">
+            </span> National Park
+            <br>
+            <span>
+                <img src="Icons/aqua_mountains.png">
+            </span> Mountains
+            <br>
+            <span>
+                <img src="Icons/blue_snowboarding.png">
+            </span> Snowboarding
+            <br>
+            <span>
+                <img src="Icons/red_house.png">
+            </span> Home Base
+            <br>
+            <span>
+                <img src="Icons/white_house.png">
+            </span> Resident
+            <br>
+            <span>
+                <img src="Icons/purple_forest.png">
+            </span> Rural Area/Camping
+            <br>
+            <span>
+                <img src="Icons/yellow_beach.png">
+            </span> Beach Town
+            <br>
+            <span>
+                <img src="Icons/orange_city.png">
+            </span> Small City
+            <br>
+            <span>
+                <img src="Icons/pink_city.png">
+            </span> Medium City
+            <br>
+            <span>
+                <img src="Icons/black_city.png">
+            </span> Large City
+            <br>
+
+        </div>
+    </div>
+
+    <!-- Modal from https://www.w3schools.com/ -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="TravelModule.closeSettings()">&times;</span>
+                <h2>Settings</h2>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <p>This application uses IndexedDB, which stores data in your web browser. If your browser doesn't support
+                        IndexedDB, you will not be able to save your locations to your browser, but you can still place markers
+                        on the map and copy the data to a .txt file, this way you can import it to a different browser.
+                    </p>
+                </div>
+                <div>
+                    <h3>Download your saved locations to a .txt file, so you can transfer them between broswers!</h3>
+                    <button id="downloadBtn" onclick="TravelModule.getMarkersForDownload()">Download Your Locations! (.txt file)</button>
+                    <p>If the download doesn't work, copy the text below to a blank .txt file and import it to the next browser</p>
+                    <br>
+                    <textarea id="downloadText" cols="100" rows="10"></textarea>
+                </div>
+                <br>
+                <div>
+                    <h3>Import previously downloaded location files to this browser</h3>
+                    <input type="file" id="fileBtn">
+                </div>
+                <br>
+                <div>
+                    <button id="importBtn" onclick="TravelModule.verifyImportFile()">Import Your Locations!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYy0DCdICQhFV06WZ77OUCq5bHUGe9YrQ&callback=TravelModule.initMap" async
+        defer></script>
+    <script>
+        var TravelModule = (function () {
+
+            window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+
+            window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+            window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
+
+            const NATIONAL_PARK = 0;
+            const MOUNTAINS = 1;
+            const SNOWBOARDING = 2;
+            const HOME_BASE = 3;
+            const RESIDENT = 4;
+            const RURAL = 5;
+            const BEACH_TOWN = 6;
+            const SMALL_CITY = 7;
+            const MEDIUM_CITY = 8;
+            const LARGE_CITY = 9;
+
+            //Icons downloaded from https://mapicons.mapsmarker.com/
+            var icons = [
+                "Icons/green_mountains.png",
+                "Icons/aqua_mountains.png",
+                "Icons/blue_snowboarding.png",
+                "Icons/red_house.png",
+                "Icons/white_house.png",
+                "Icons/purple_forest.png",
+                "Icons/yellow_beach.png",
+                "Icons/orange_city.png",
+                "Icons/pink_city.png",
+                "Icons/black_city.png"
+            ];
+
+            var db;
+            var promise;
+            var mapListener;
+            var markerArray = [];
+            var request;
+            if (window.indexedDB) {
+                request = window.indexedDB.open("locationDB", 1);
+
+                promise = new Promise(function (resolve, reject) {
+                    request.onerror = function (event) {
+                        alert("Cannot retrieve data");
+                        reject();
+                    };
+
+                    request.onsuccess = function (event) {
+                        db = request.result;
+                        resolve();
+                    };
+
+                    request.onupgradeneeded = function (event) {
+                        var db = event.target.result;
+                        var objectStore = db.createObjectStore("location", { keyPath: "id", autoIncrement: true });
+
+                        for (var i in markerCoords) {
+                            objectStore.add(markerCoords[i]);
+                        }
+                    }
+                });
+            } else {
+                window.alert("Your browser doesn't support a stable version of IndexedDB. Your data will not be saved to your web browser");
+            }
+
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 40, lng: -100 },
+                    zoom: 4
+                });
+
+                map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById("title"));
+                map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById("settingsBtn"));
+                map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById("legend"));
+                map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById("addBtn"));
+                map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById("addMenu"));
+                document.getElementById("addMenu").style.display = "none";
+
+                if (window.indexedDB) {
+                    promise.then(getAllMarkers);
+                }
+            }
+
+            function getAllMarkers() {
+                var objectStore = db.transaction("location").objectStore("location");
+
+                objectStore.openCursor().onsuccess = function (e) {
+                    var cursor = e.target.result;
+
+                    if (cursor) {
+                        var location = new google.maps.LatLng(cursor.value.position);
+                        var title = cursor.value.title;
+                        var type = cursor.value.type;
+                        var id = cursor.value.id;
+
+                        addMarkerToMap(location, title, type, id);
+                        cursor.continue();
+                    }
+                };
+            }
+
+            function getMarkersForDownload() {
+                var exportArray = [];
+
+                if (!window.indexedDB) {
+                    for (var i in markerArray) {
+                        var obj = {
+                            title: markerArray[i].title,
+                            type: icons.findIndex(function (id) {
+                                return id == markerArray[i].icon;
+                            }),
+                            position: markerArray[i].position
+                        }
+                        exportArray.push(obj);
+                    }
+                    document.getElementById("downloadText").innerHTML = JSON.stringify(exportArray);
+                    return;
+                }
+
+                var objectStore = db.transaction("location").objectStore("location");
+                var downloadPromise = new Promise(function (resolve, reject) {
+                    objectStore.openCursor().onsuccess = function (e) {
+                        var cursor = e.target.result;
+
+                        if (cursor) {
+                            var location = cursor.value.position;
+                            var title = cursor.value.title;
+                            var type = cursor.value.type;
+
+                            var obj = {
+                                title: title,
+                                type: type,
+                                position: location
+                            };
+                            exportArray.push(obj);
+
+                            cursor.continue();
+                        }
+                        else { resolve(); }
+                    };
+                });
+
+                downloadPromise.then(download);
+
+                function download() {
+                    var element = document.createElement("a");
+                    element.setAttribute('href', 'data:text/plain;charset=utf8,' + encodeURIComponent(JSON.stringify(exportArray)));
+                    element.setAttribute('download', 'travelmapdata.txt');
+                    element.click();
+                    document.getElementById("downloadText").innerHTML = JSON.stringify(exportArray);
+                }
+            }
+
+            function clickForCoordinates(e) {
+                var latitude = e.latLng.lat();
+                var longitude = e.latLng.lng();
+                document.getElementById("latTxtBox").value = latitude;
+                document.getElementById("lngTxtBox").value = longitude;
+            }
+
+            function showMenu() {
+                document.getElementById("addBtn").style.display = "none";
+                document.getElementById("addMenu").style.display = "block";
+                mapListener = google.maps.event.addListener(map, 'click', clickForCoordinates);
+            }
+
+            function addToDatabase() {
+                var latitude = parseFloat(document.getElementById("latTxtBox").value);
+                var longitude = parseFloat(document.getElementById("lngTxtBox").value);
+
+                if (!latitude) { latitude = 0; }
+                if (!longitude) { longitude = 0; }
+
+                google.maps.event.removeListener(mapListener);
+                var titleInput = document.getElementById("nameTxtBox").value;
+                var iconInput = document.getElementById("typeDropdown").value;
+                var location = new google.maps.LatLng({ lat: latitude, lng: longitude });
+
+                var obj = { title: titleInput, type: parseInt(iconInput), position: { lat: latitude, lng: longitude } };
+
+                if (!window.indexedDB) {
+                    addMarkerToMap(location, titleInput, iconInput, 0);
+                    clearMenu();
+                    return;
+                }
+
+                var request = db.transaction(["location"], "readwrite")
+                    .objectStore("location")
+                    .add(obj);
+
+                request.onsuccess = function (event) {
+                    addMarkerToMap(location, titleInput, iconInput, event.target.result);
+                };
+
+                request.onerror = function (event) {
+                    alert("Unable to add location to map");
+                }
+                clearMenu();
+
+                function clearMenu() {
+                    document.getElementById("nameTxtBox").value = "";
+                    document.getElementById("latTxtBox").value = "";
+                    document.getElementById("lngTxtBox").value = "";
+                    document.getElementById("addMenu").style.display = "none";
+                    document.getElementById("addBtn").style.display = "block";
+                }
+            }
+
+            function addMarkerToMap(location, title, iconValue, id) {
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: title,
+                    icon: icons[iconValue]
+                });
+                marker.set("id", id);
+                marker.set("arrayPosition", markerArray.length);
+
+                var id = marker.get("id");
+                var arrayPosition = marker.get("arrayPosition");
+                var markerListener = google.maps.event.addListener(marker, 'click', function () {
+                    var infowindow = new google.maps.InfoWindow({
+                        content: '<p><b>' + title + '</b></p>' +
+                            '<button onclick="TravelModule.deleteFromDatabaseAndMap(' + id + ', ' + arrayPosition + ')">Delete</button>'
+                    });
+                    infowindow.open(map, marker);
+                });
+                markerArray.push(marker);
+            }
+
+            function deleteFromDatabaseAndMap(id, arrayPosition) {
+                if (!window.indexedDB) {
+                    markerArray[arrayPosition].setMap(null);
+                    return;
+                }
+
+                var deleteRequest = db.transaction(["location"], "readwrite")
+                    .objectStore("location")
+                    .delete(id);
+
+                deleteRequest.onsuccess = function (event) {
+                    markerArray[arrayPosition].setMap(null);
+                };
+            }
+
+            function verifyImportFile() {
+                var input = document.getElementById("fileBtn");
+                var file = input.files[0];
+                var text = /text.*/;
+
+                if (file) {
+                    if (file.type.match(text)) {
+                        var reader = new FileReader();
+                        reader.readAsText(file);
+
+                        reader.onload = function (e) {
+                            try {
+                                var imported = JSON.parse(reader.result);
+                                importIntoDatabase(imported);
+                            }
+                            catch (err) {
+                                alert("Unable to translate text file");
+                            }
+                        }
+                    } else {
+                        alert("Please attach valid .txt file!");
+                    }
+                } else {
+                    alert("Please attach file!");
+                }
+            }
+
+            function importIntoDatabase(imported) {
+                if (!window.indexedDB) {
+                    for (var j in imported) {
+                        addMarkerToMap(imported[j].position, imported[j].title, imported[j].type, imported[j].id);
+                    }
+                    return;
+                }
+
+                db = request.result;
+                var transaction = db.transaction('location', "readwrite");
+                var itemStore = transaction.objectStore('location');
+                var i = 0;
+
+                nextEntry();
+
+                function nextEntry() {
+                    if (i < imported.length) {
+                        itemStore.put(imported[i]).onsuccess = function (e) {
+                            imported[i].id = e.target.result;
+                            i++;
+                            nextEntry();
+                        };
+                    }
+                    else {
+                        for (var j in imported) {
+                            addMarkerToMap(imported[j].position, imported[j].title, imported[j].type, imported[j].id);
+                        }
+                        closeSettings();
+                    }
+                }
+            }
+
+            function showSettings() {
+                document.getElementById('myModal').style.display = "block";
+            }
+
+            function closeSettings() {
+                document.getElementById('fileBtn').value = null;
+                document.getElementById('myModal').style.display = "none";
+            }
+
+            var markerCoords = [
+                {
+                    title: "Acadia",
+                    type: NATIONAL_PARK,
+                    position: { lat: 44.339163, lng: -68.272769 }
+                },
+                {
+                    title: "Portland",
+                    type: MEDIUM_CITY,
+                    position: { lat: 43.661073, lng: -70.248048 }
+                },
+                {
+                    title: "Mount Chocorua",
+                    type: MOUNTAINS,
+                    position: { lat: 43.954670, lng: -71.273563 }
+                },
+                {
+                    title: "New York City",
+                    type: LARGE_CITY,
+                    position: { lat: 40.71173729434421, lng: -74.01357632368706 }
+                },
+                {
+                    title: "High Point",
+                    type: MOUNTAINS,
+                    position: { lat: 41.320707711087245, lng: -74.66261939137371 }
+                },
+                {
+                    title: "Pulpit Rock",
+                    type: MOUNTAINS,
+                    position: { lat: 40.596791, lng: -75.931351 }
+                },
+                {
+                    title: "Blue Mountain",
+                    type: SNOWBOARDING,
+                    position: { lat: 40.822570, lng: -75.512711 }
+                },
+                {
+                    title: "Philadelphia",
+                    type: LARGE_CITY,
+                    position: { lat: 39.95282303313769, lng: -75.1628538044659 }
+                },
+                {
+                    title: "Voorhees Township",
+                    type: RESIDENT,
+                    position: { lat: 39.846193, lng: -74.993393 }
+                },
+                {
+                    title: "Ocean City",
+                    type: BEACH_TOWN,
+                    position: { lat: 39.275413, lng: -74.570028 }
+                },
+                {
+                    title: "Cape May",
+                    type: BEACH_TOWN,
+                    position: { lat: 38.932857, lng: -74.960982 }
+                },
+                {
+                    title: "Washington D.C.",
+                    type: LARGE_CITY,
+                    position: { lat: 38.889212, lng: -77.048520 }
+                },
+                {
+                    title: "Herndon",
+                    type: RESIDENT,
+                    position: { lat: 38.966054, lng: -77.415278 }
+                },
+                {
+                    title: "Cape Henlopen",
+                    type: BEACH_TOWN,
+                    position: { lat: 38.805677, lng: -75.097115 }
+                },
+                {
+                    title: "Dover",
+                    type: SMALL_CITY,
+                    position: { lat: 39.127637, lng: -75.468644 }
+                },
+                {
+                    title: "Kitty Hawk",
+                    type: BEACH_TOWN,
+                    position: { lat: 36.122073, lng: -75.724079 }
+                },
+                {
+                    title: "Myrtle Beach",
+                    type: BEACH_TOWN,
+                    position: { lat: 33.699299, lng: -78.871180 }
+                },
+                {
+                    title: "Marietta",
+                    type: MEDIUM_CITY,
+                    position: { lat: 33.962609, lng: -84.549584 }
+                },
+                {
+                    title: "Panama City",
+                    type: BEACH_TOWN,
+                    position: { lat: 30.230905, lng: -85.904363 }
+                },
+                {
+                    title: "Orlando",
+                    type: LARGE_CITY,
+                    position: { lat: 28.472244, lng: -81.463151 }
+                },
+                {
+                    title: "Naples",
+                    type: BEACH_TOWN,
+                    position: { lat: 26.133499, lng: -81.805183 }
+                },
+                {
+                    title: "Gulf Shores",
+                    type: BEACH_TOWN,
+                    position: { lat: 30.250201, lng: -87.670246 }
+                },
+                {
+                    title: "Gatlinburg",
+                    type: SMALL_CITY,
+                    position: { lat: 35.729111, lng: -83.476359 }
+                },
+                {
+                    title: "Mammoth Cave",
+                    type: NATIONAL_PARK,
+                    position: { lat: 37.185920, lng: -86.100061 }
+                },
+                {
+                    title: "Louisville",
+                    type: LARGE_CITY,
+                    position: { lat: 38.256762, lng: -85.763466 }
+                },
+                {
+                    title: "Lexington",
+                    type: LARGE_CITY,
+                    position: { lat: 38.033655, lng: -84.514831 }
+                },
+                {
+                    title: "Salyersville",
+                    type: RURAL,
+                    position: { lat: 37.753297, lng: -83.069143 }
+                },
+                {
+                    title: "Plainfield",
+                    type: HOME_BASE,
+                    position: { lat: 39.681398, lng: -86.379125 }
+                },
+                {
+                    title: "Chicago",
+                    type: LARGE_CITY,
+                    position: { lat: 41.876086, lng: -87.629802 }
+                },
+                {
+                    title: "Perfect North Slopes",
+                    type: SNOWBOARDING,
+                    position: { lat: 39.147433, lng: -84.885848 }
+                },
+                {
+                    title: "Cincinnati",
+                    type: LARGE_CITY,
+                    position: { lat: 39.339324, lng: -84.268286 }
+                },
+                {
+                    title: "Canton",
+                    type: MEDIUM_CITY,
+                    position: { lat: 40.821070, lng: -81.397929 }
+                },
+                {
+                    title: "Sandusky",
+                    type: BEACH_TOWN,
+                    position: { lat: 41.478942, lng: -82.679659 }
+                },
+                {
+                    title: "Detroit",
+                    type: LARGE_CITY,
+                    position: { lat: 42.564883, lng: -83.091659 }
+                },
+                {
+                    title: "Saugatuck Dunes",
+                    type: BEACH_TOWN,
+                    position: { lat: 42.704452, lng: -86.206953 }
+                },
+                {
+                    title: "Manistee",
+                    type: SMALL_CITY,
+                    position: { lat: 44.242128, lng: -86.339423 }
+                },
+                {
+                    title: "Crystal Mountain",
+                    type: SNOWBOARDING,
+                    position: { lat: 44.519298, lng: -85.992010 }
+                },
+                {
+                    title: "South Bend",
+                    type: MEDIUM_CITY,
+                    position: { lat: 41.681366, lng: -86.249107 }
+                },
+                {
+                    title: "Terre Haute",
+                    type: MEDIUM_CITY,
+                    position: { lat: 39.483448, lng: -87.330378 }
+                },
+                {
+                    title: "Des Moines",
+                    type: LARGE_CITY,
+                    position: { lat: 41.588350, lng: -93.619536 }
+                },
+                {
+                    title: "Cookson Hills",
+                    type: RURAL,
+                    position: { lat: 36.139120, lng: -94.787277 }
+                },
+                {
+                    title: "Jasper",
+                    type: RURAL,
+                    position: { lat: 36.006125, lng: -93.300025 }
+                },
+                {
+                    title: "Waco",
+                    type: MEDIUM_CITY,
+                    position: { lat: 31.549399, lng: -97.114573 }
+                },
+                {
+                    title: "Pomeroy",
+                    type: RURAL,
+                    position: { lat: 39.029021, lng: -82.030489 }
+                },
+                {
+                    title: "Banff",
+                    type: NATIONAL_PARK,
+                    position: { lat: 51.170772, lng: -115.560640 }
+                },
+                {
+                    title: "Haiti",
+                    type: SMALL_CITY,
+                    position: { lat: 19.914254, lng: -73.177214 }
+                },
+                {
+                    title: "Jamaica",
+                    type: SMALL_CITY,
+                    position: { lat: 18.488982, lng: -77.923853 }
+                },
+                {
+                    title: "Grand Cayman",
+                    type: SMALL_CITY,
+                    position: { lat: 19.314272, lng: -81.242136 }
+                },
+                {
+                    title: "Cancun",
+                    type: SMALL_CITY,
+                    position: { lat: 21.173521, lng: -86.807693 }
+                },
+                {
+                    title: "Coopers Rock",
+                    type: RURAL,
+                    position: {lat: 39.638733, lng: -79.792025}
+                }
+            ]
+
+            return {
+                initMap: initMap,
+                showMenu: showMenu,
+                addToDatabase: addToDatabase,
+                deleteFromDatabaseAndMap: deleteFromDatabaseAndMap,
+                showSettings: showSettings,
+                closeSettings: closeSettings,
+                getMarkersForDownload: getMarkersForDownload,
+                verifyImportFile: verifyImportFile
+            }
+        }());
+    </script>
+</body>
+
+</html>

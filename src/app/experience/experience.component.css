@@ -1,0 +1,29 @@
+.container-styles {
+    position: relative;
+    padding-top: 65px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.resume {
+    border-radius: 5px;
+    font-family: 'Julius Sans One', sans-serif;
+}
+
+.list-group {
+    background-color: white;
+}
+
+.header {
+    text-align: center;
+    font-size: 35px;
+    color: white;
+    font-family: 'Julius Sans One', sans-serif;
+}
+
+.l-name {
+    float: left;
+}
+
+.l-value, .l-vdesc {
+    float: right;
+}

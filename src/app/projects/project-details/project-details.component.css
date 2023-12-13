@@ -1,0 +1,29 @@
+.container-styles {
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+}
+
+.proj-header {
+    padding-top: 55px;
+    position: relative;
+}
+
+.proj-title {
+    color: white;
+    font-size: 45px;
+    font-family: 'Julius Sans One', sans-serif;
+}
+
+.proj-info {
+    position: relative;
+    padding-top: 75px;
+    height: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: white;
+}
+
+.proj-link {
+    font-family: 'Julius Sans One', sans-serif;
+}
