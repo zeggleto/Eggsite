@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Project } from './projects/project';
 
 @Component({
   selector: 'app-root',
@@ -7,13 +8,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  projects: any = [];
+  projects: Project[] = [];
   @ViewChild('navbarToggler') navbarToggler: ElementRef
 
   constructor(private _service: HttpClient) {
     this._service.get('../assets/data/projects.json').subscribe(
       data => {
-        this.projects = data;
+        this.projects = data as Project[];
       },
       (err: HttpErrorResponse) => {
         console.log(err.message);

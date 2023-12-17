@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Project } from '../project';
@@ -9,7 +9,7 @@ import { ProjectService } from '../project.service';
   templateUrl: './project-details.component.html',
   styleUrls: ['./project-details.component.css']
 })
-export class ProjectDetailsComponent implements OnInit {
+export class ProjectDetailsComponent {
   project: Project = {
     name: '',
     shortDesc: '',
@@ -23,10 +23,6 @@ export class ProjectDetailsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private _router: Router, public pService: ProjectService) {
     this.getProject();
-  }
-
-  ngOnInit() {
-
   }
 
   getProject() {
