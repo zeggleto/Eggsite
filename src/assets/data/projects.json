@@ -9,19 +9,11 @@
         "projLink": "../assets/projects/Travel Map/pMap.html"
     },
     {
-        "name": "U.S. Rent Map",
-        "shortDesc": "Median rent for hundreds of U.S. cities mapped out",
-        "longDesc": "This project consists of a web scraper to gather the rent data, a Flask server to deliver the data to the webpage, and the google maps page itself. The version you'll see when you click on 'View Project' is just the page getting the data from a .txt file, no scraper or Flask server; those parts are on my github page. The data used to populate this map was scraped from https://www.apartmentlist.com/rentonomics/national-rent-data/.",
-        "technologies": "Python3, BeautifulSoup, Flask, Google Maps API, HTML5, CSS3, Javascript",
-        "imageUrl": "../assets/imgs/usrentmap.PNG",
-        "gitLink": "https://github.com/zeggleto/USRentMap",
-        "projLink": "../assets/projects/US Rent Map/index.html"
-    },
-    {
         "name": "Personal Website",
         "shortDesc": "What you're seeing right now",
         "longDesc": "This is my current website, built using Angular. I use it to relay my information to other people and share/store some of the little projects I've created",
         "technologies": "Angular, HTML5, CSS, TypeScript, BootStrap, JSON",
+        "imageUrl": "../assets/imgs/Header.jpg",
         "gitLink": "https://github.com/zeggleto/Eggsite",
         "projLink": "https://zacheggleton.com"
     }
