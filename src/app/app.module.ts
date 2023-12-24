@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
+import { TravelMapModule } from './travel-map/travel-map.module';
 import { AppComponent } from './app.component';
 import { IntroComponent } from './intro/intro.component';
 import { AboutComponent } from './about/about.component';
@@ -20,7 +21,8 @@ import { ExperienceComponent } from './experience/experience.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    TravelMapModule
   ],
   providers: [],
   bootstrap: [AppComponent]
