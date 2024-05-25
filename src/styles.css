@@ -30,3 +30,35 @@ body {
     -webkit-animation-name: fadeIn;
     animation-name: fadeIn;
  }
+
+ /* Leaflet map styles */
+ .legend {
+   padding: 6px 8px;
+   font: 14px/16px Arial, Helvetica, sans-serif;
+   background: white;
+   background: rgba(255,255,255,0.8);
+   box-shadow: 0 0 15px rgba(0,0,0,0.2);
+   border-radius: 5px;
+}
+
+.legend i{
+   line-height: 18px;
+   float: left;
+   color: #555;
+   opacity: 0.7;
+}
+
+.legend img{
+   margin-left: 10px;
+   float: right;
+}
+
+.legend span{
+   display: inline-block;
+   width: 100%;
+}
+
+/* Only for the default markers for now */
+.leaflet-pane.leaflet-shadow-pane {
+   display: none;
+}

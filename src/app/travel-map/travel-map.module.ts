@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
-import { provideHttpClient, withJsonpSupport } from '@angular/common/http';
-import { GoogleMapsModule } from '@angular/google-maps';
 import { TravelMapComponent } from './travel-map.component';
+import { TravelMapService } from './travel-map.service';
+import { DBService } from './db.service';
 
 @NgModule({
   declarations: [TravelMapComponent],
-  imports: [GoogleMapsModule],
   exports: [TravelMapComponent],
-  providers: [provideHttpClient(withJsonpSupport())]
+  providers: [TravelMapService, DBService]
 })
 export class TravelMapModule {}

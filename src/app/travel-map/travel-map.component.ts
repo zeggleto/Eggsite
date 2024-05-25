@@ -1,25 +1,83 @@
-import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Component, AfterViewInit } from '@angular/core';
+import * as L from 'leaflet';
+import { TravelMapService } from './travel-map.service';
 
 @Component({
   selector: 'app-travel-map',
   templateUrl: './travel-map.component.html',
   styleUrls: ['./travel-map.component.css']
 })
-export class TravelMapComponent {
-  apiLoaded: Observable<boolean>;
+export class TravelMapComponent implements AfterViewInit {
+  map: L.Map;
+  constructor(private service: TravelMapService) {}
 
-  constructor(httpClient: HttpClient) {
-    // If you're using the `<map-heatmap-layer>` directive, you also have to include the `visualization` library
-    // when loading the Google Maps API. To do so, you can add `&libraries=visualization` to the script URL:
-    // https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization
+  private initMap(): void {
+    this.map = L.map('map', {
+      center: [ 40, -100 ],
+      zoom: 4,
+      zoomControl: false
+    });
 
-    this.apiLoaded = httpClient.jsonp('https://maps.googleapis.com/maps/api/js?key=AIzaSyCYy0DCdICQhFV06WZ77OUCq5bHUGe9YrQ', 'callback')
-        .pipe(
-          map(() => true),
-          catchError(() => of(false)),
-        );
+    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      minZoom: 3,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    });
+
+    tiles.addTo(this.map)
+    this.addLegendToMap()
+    this.addMarkersToMap()
+    this.map.on('click', this.onMapClick)
+  }
+
+  addLegendToMap(): void {
+    const legend = new L.Control({position: 'bottomleft'});
+
+    legend.onAdd = function () {
+      const div = L.DomUtil.create('div', 'legend');
+      div.innerHTML +=
+        '<span><i>National Park</i><img src="assets/imgs/Icons/green_mountains.png"></span></br>' +
+        '<span><i>Mountains</i><img src="assets/imgs/Icons/aqua_mountains.png"></span></br>' +
+        '<span><i>Snowboarding</i><img src="assets/imgs/Icons/blue_snowboarding.png"></span></br>' +
+        '<span><i>Home Base</i><img src="assets/imgs/Icons/red_house.png"></span></br>' +
+        '<span><i>Resident</i><img src="assets/imgs/Icons/white_house.png"></span></br>' +
+        '<span><i>Rural Area/Camping</i><img src="assets/imgs/Icons/purple_forest.png"></span></br>' +
+        '<span><i>Beach town</i><img src="assets/imgs/Icons/yellow_beach.png"></span></br>' +
+        '<span><i>Small City</i><img src="assets/imgs/Icons/orange_city.png"></span></br>' +
+        '<span><i>Medium City</i><img src="assets/imgs/Icons/pink_city.png"></span></br>' +
+        '<span><i>Large City</i><img src="assets/imgs/Icons/black_city.png"></span></br>'
+      return div;
+    };
+
+    legend.addTo(this.map)
+  }
+
+  activateAddMarkerMode(): void {
+    console.log('Add Marker Mode Activated')
+
+  }
+
+  addMarkersToMap(): void {
+    const markers = this.service.getMarkers()
+    for(const m of markers) {
+      const displayM = L.marker(m.coords).addTo(this.map)
+
+      displayM.bindPopup(m.description)
+    }
+  }
+
+  onMapClick(): void {
+    if (true) {
+      console.log(this.map)
+      this.useMap()
+    }
+  }
+
+  useMap() {
+    L.marker([39.702781387946104, -80.40301195173357]).addTo(this.map).bindPopup('Sure')
+  }
+
+  ngAfterViewInit(): void {
+    this.initMap();
   }
 }
