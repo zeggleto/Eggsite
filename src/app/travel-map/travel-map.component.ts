@@ -9,6 +9,7 @@ import { TravelMapService } from './travel-map.service';
 })
 export class TravelMapComponent implements AfterViewInit {
   map: L.Map;
+  mode = 'default';
   constructor(private service: TravelMapService) {}
 
   private initMap(): void {
@@ -25,9 +26,39 @@ export class TravelMapComponent implements AfterViewInit {
     });
 
     tiles.addTo(this.map)
+    this.addButtonsToMap()
     this.addLegendToMap()
     this.addMarkersToMap()
-    this.map.on('click', this.onMapClick)
+    this.map.on('click', (e) => {
+      console.log('Map click triggered')
+      this.onMapClick(this.map, e)
+    })
+  }
+
+  addButtonsToMap(): void {
+    const addLocationsButton = new L.Control({position: 'topleft'})
+
+    addLocationsButton.onAdd = function () {
+      const div = L.DomUtil.create('div', 'addLocationButton');
+
+      div.innerHTML +=
+        '<button id="addLocationButton">Add Location</button>'
+
+      L.DomEvent.on(div, 'click', function (e) {
+        L.DomEvent.stopPropagation(e);
+      });
+
+      return div;
+    }
+
+    const button = document.getElementById('addLocationButton');
+    if (button) {
+      button.addEventListener('click', () => {
+        console.log('Button clicked');
+      });
+    }
+
+    addLocationsButton.addTo(this.map)
   }
 
   addLegendToMap(): void {
@@ -46,6 +77,7 @@ export class TravelMapComponent implements AfterViewInit {
         '<span><i>Small City</i><img src="assets/imgs/Icons/orange_city.png"></span></br>' +
         '<span><i>Medium City</i><img src="assets/imgs/Icons/pink_city.png"></span></br>' +
         '<span><i>Large City</i><img src="assets/imgs/Icons/black_city.png"></span></br>'
+      div
       return div;
     };
 
@@ -54,7 +86,7 @@ export class TravelMapComponent implements AfterViewInit {
 
   activateAddMarkerMode(): void {
     console.log('Add Marker Mode Activated')
-
+    this.mode = 'addMarker';
   }
 
   addMarkersToMap(): void {
@@ -66,15 +98,15 @@ export class TravelMapComponent implements AfterViewInit {
     }
   }
 
-  onMapClick(): void {
-    if (true) {
-      console.log(this.map)
-      this.useMap()
+  onMapClick(map: L.Map, e: L.LeafletMouseEvent): void {
+    if (this.mode === 'addMarker') {
+      this.addMarker(map, e.latlng)
+      this.mode = 'default';
     }
   }
 
-  useMap() {
-    L.marker([39.702781387946104, -80.40301195173357]).addTo(this.map).bindPopup('Sure')
+  addMarker(map: L.Map, latlng: L.LatLng): void {
+    L.marker(latlng).addTo(map).bindPopup('Sure')
   }
 
   ngAfterViewInit(): void {
